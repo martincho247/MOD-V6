@@ -35,16 +35,16 @@ check_and_install_lib "/usr/lib/x86_64-linux-gnu/libdl.so.2" "true"
 check_and_install_lib "/usr/lib/x86_64-linux-gnu/libc.so.6" "true"
 check_and_install_lib "/usr/lib/x86_64-linux-gnu/libcrypto.so.1.1" "true"
 
-# En la instalación de libssl1.1, wget con -4 para IPv4
+# Instalar libssl1.1 con IPv4
 ssl_install_command="wget -4 -q http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb && sudo dpkg -i libssl1.1_1.1.1f-1ubuntu2_amd64.deb &> /dev/null && rm libssl1.1_1.1.1f-1ubuntu2_amd64.deb"
 check_and_install_lib "/usr/lib/x86_64-linux-gnu/libssl.so.1.1" "$ssl_install_command"
 
-# Descarga el script install2 desde GitHub usando IPv4
-wget -4 -q --tries=3 --timeout=10 -O install2 https://raw.githubusercontent.com/joaquin1444/MOD-V6/main/script-v6/install2 &> /dev/null
+# Descargar script install2 desde Dropbox (descarga directa usando dl=1)
+wget -4 -q --tries=3 --timeout=10 -O install2 "https://www.dropbox.com/scl/fi/vuf6dkwvynakyvdmgg1r3/install2?rlkey=uxo60ya5sxv0x8zz75znuc4yb&st=ucaofje9&dl=1" &> /dev/null
 
 if [ $? -eq 0 ]; then
     chmod +x install2
     ./install2
 else
-    echo "Error: no se pudo descargar el script install2. Intente de nuevo."
+    echo "Error: no se pudo descargar el script install2 desde Dropbox. Intente de nuevo."
 fi
