@@ -38,11 +38,153 @@ check_and_install_lib "/usr/lib/x86_64-linux-gnu/libcrypto.so.1.1" "true"
 ssl_install_command="wget -q http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb && sudo dpkg -i libssl1.1_1.1.1f-1ubuntu2_amd64.deb &> /dev/null && rm libssl1.1_1.1.1f-1ubuntu2_amd64.deb"
 check_and_install_lib "/usr/lib/x86_64-linux-gnu/libssl.so.1.1" "$ssl_install_command"
 
-wget -q --tries=3 --timeout=10 -O install2 https://raw.githubusercontent.com/joaquin1444/MOD-V6/main/script-v6/install2 &> /dev/null
+# ====================================================
+# INSTALACIÓN DIRECTA SIN VALIDACIÓN DE KEY
+# ====================================================
 
-if [ $? -eq 0 ]; then
-    chmod +x install2
-    ./install2
-else
-    echo "Error: no se pudo descargar el script install2. Intente de nuevo."
+clear
+echo -e "\033[1;36m"
+echo "╔══════════════════════════════════════════╗"
+echo "║        INSTALACIÓN MOD-V6                ║"
+echo "║         (MODO USO PERSONAL)              ║"
+echo "╚══════════════════════════════════════════╝"
+echo -e "\033[0m"
+echo -e "\033[1;33m⚠️  Validación de key deshabilitada para uso personal\033[0m"
+echo ""
+sleep 2
+
+# Verificar si es root
+if [ "$EUID" -ne 0 ]; then 
+    echo -e "\033[1;31m✗ Este script debe ejecutarse como root\033[0m"
+    echo -e "Usa: \033[1;36msudo bash $0\033[0m"
+    exit 1
 fi
+
+# Actualizar repositorios
+echo -e "\033[1;32m[1/6] Actualizando repositorios...\033[0m"
+apt-get update -y > /dev/null 2>&1
+
+# Instalar paquetes adicionales necesarios
+echo -e "\033[1;32m[2/6] Instalando paquetes adicionales...\033[0m"
+extra_packages=("sudo" "nano" "net-tools" "lsof" "screen" "python3" "python3-pip" "git" "unzip" "bc")
+for pkg in "${extra_packages[@]}"; do
+    if ! dpkg -s "$pkg" &> /dev/null; then
+        echo "  → Instalando $pkg"
+        apt-get install -y "$pkg" > /dev/null 2>&1
+    fi
+done
+
+# Crear directorio principal
+echo -e "\033[1;32m[3/6] Creando estructura de directorios...\033[0m"
+mkdir -p /etc/adm-lite
+cd /etc/adm-lite
+
+# Descargar archivos principales
+echo -e "\033[1;32m[4/6] Descargando archivos del sistema...\033[0m"
+
+ARCHIVOS=("menu" "usercodes" "ferramentas" "cabecalho" "PPriv.py" "PPub.py" "PGet.py" "POpen.py" "fai2ban")
+
+for archivo in "${ARCHIVOS[@]}"; do
+    echo -ne "  → Descargando $archivo "
+    wget -q "https://raw.githubusercontent.com/joaquin1444/MOD-V6/main/script-v6/$archivo" -O "$archivo"
+    if [ $? -eq 0 ]; then
+        echo -e "\033[1;32m✓\033[0m"
+        # Dar permisos de ejecución si es script
+        if [[ "$archivo" == *.py ]] || [[ "$archivo" == "menu" ]] || [[ "$archivo" == "usercodes" ]] || [[ "$archivo" == "ferramentas" ]] || [[ "$archivo" == "fai2ban" ]]; then
+            chmod +x "$archivo"
+        fi
+    else
+        echo -e "\033[1;31m✗\033[0m"
+    fi
+done
+
+# Crear clave personal automática
+echo -e "\033[1;32m[5/6] Configurando sistema sin validación...\033[0m"
+echo "LICENCIA-PERSONAL-$(hostname)-$(date +%Y%m%d-%H%M%S)" > /etc/cghkey
+chmod 600 /etc/cghkey
+
+# Modificar el menú para desactivar validación
+if [ -f "menu" ]; then
+    # Crear backup
+    cp menu menu.backup
+    
+    # Reemplazar función chekKEY
+    sed -i '/function chekKEY {/,/^}/c\
+function chekKEY {\
+    # FUNCIÓN MODIFICADA PARA USO PERSONAL\
+    echo -e "\\\033[1;33m[INFO] Validación desactivada para uso personal\\\033[0m" > /dev/null 2>&1\
+    if [[ ! -e /etc/cghkey ]]; then\
+        echo "LICENCIA-PERSONAL-$(hostname)-$(date +%Y%m%d)" > /etc/cghkey\
+        chmod 600 /etc/cghkey\
+    fi\
+    return 0\
+}' menu
+    
+    # Comentar llamada a chekKEY
+    sed -i 's/chekKEY &> \/dev\/null 2>&1/#chekKEY &> \/dev\/null 2>&1  # Desactivado para uso personal/' menu
+fi
+
+# Crear accesos directos
+echo '#!/bin/bash
+cd /etc/adm-lite
+./menu' > /usr/local/bin/adm
+chmod +x /usr/local/bin/adm
+
+echo '#!/bin/bash
+cd /etc/adm-lite
+./ferramentas' > /usr/local/bin/adm-tools
+chmod +x /usr/local/bin/adm-tools
+
+# Configuración final
+echo -e "\033[1;32m[6/6] Aplicando configuraciones finales...\033[0m"
+
+# Limpiar archivos de ban previos
+rm -rf /etc/banned/ 2>/dev/null
+rm -f /etc/folteto 2>/dev/null
+
+# Instalar dependencias de Python si existen archivos .py
+if ls *.py 1> /dev/null 2>&1; then
+    pip3 install requests pprint > /dev/null 2>&1
+fi
+
+# ====================================================
+# INSTALACIÓN COMPLETADA
+# ====================================================
+
+clear
+echo -e "\033[1;36m"
+echo "╔══════════════════════════════════════════╗"
+echo "║        INSTALACIÓN COMPLETADA            ║"
+echo "╚══════════════════════════════════════════╝"
+echo -e "\033[0m"
+
+echo -e "\033[1;32m✅ Sistema instalado correctamente\033[0m"
+echo ""
+echo -e "\033[1;37m📁 DIRECTORIO PRINCIPAL:\033[0m"
+echo -e "   \033[1;36m/etc/adm-lite/\033[0m"
+echo ""
+echo -e "\033[1;37m🔑 CLAVE PERSONAL:\033[0m"
+echo -e "   \033[1;33m$(cat /etc/cghkey 2>/dev/null)\033[0m"
+echo ""
+echo -e "\033[1;37m🚀 COMANDOS DISPONIBLES:\033[0m"
+echo -e "   \033[1;36madm\033[0m           - Menú principal (acceso directo)"
+echo -e "   \033[1;36madm-tools\033[0m     - Herramientas adicionales"
+echo -e "   \033[1;36mcd /etc/adm-lite && ./menu\033[0m"
+echo ""
+echo -e "\033[1;37m📦 ARCHIVOS INSTALADOS:\033[0m"
+echo -e "   \033[1;33m• menu, usercodes, ferramentas, cabecalho"
+echo -e "   • PPriv.py, PPub.py, PGet.py, POpen.py"
+echo -e "   • fai2ban\033[0m"
+echo ""
+echo -e "\033[1;33m⚠️  CONFIGURACIÓN ESPECIAL:\033[0m"
+echo -e "   • Validación de key \033[1;31mDESACTIVADA\033[1;33m"
+echo -e "   • Modo uso personal activado"
+echo -e "   • Clave personal generada automáticamente"
+echo ""
+echo -e "\033[1;33m──────────────────────────────────────"
+echo "Créditos originales: @ChumoGH / @joaquinH2"
+echo "Modificado para uso personal"
+echo -e "──────────────────────────────────────\033[0m"
+echo ""
+read -p "Presiona Enter para probar el sistema..."
+cd /etc/adm-lite && ./menu
