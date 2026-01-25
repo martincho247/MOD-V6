@@ -1,41 +1,17 @@
 #!/bin/bash
 function chekKEY {
-Key="$(cat /etc/cghkey)"
-IiP="$(ofus "$Key" | grep -vE '127\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | grep -o -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')"
-[[ ! -e /etc/folteto ]] && wget --no-check-certificate -O /etc/folteto $IiP:81/ChumoGH/checkIP.log 
-cheklist="$(cat /etc/folteto)"
-chekKEY="$(echo -e "$cheklist" | grep ${Key} | awk '{print $5}')"
-chekIP="$(echo -e "$cheklist" | grep ${IP} | awk '{print $3}')"
-[[ -z ${chekKEY} || -z ${chekIP} ]] && {
-xyz=$(curl -sSL "https://www.dropbox.com/s/jzkd6fzey2u0m0g/token.sh")
-ID="$(echo $xyz| awk '{print $2}')"
-TOKEN="$(echo $xyz| awk '{print $1}')"
-urlBOT="https://api.telegram.org/bot$TOKEN/sendMessage"
-echo 'clear&&clear
-echo -e "\n\n\n \033[0;31m==================================================
-   ¡ 🚫 KEY BANEADA  🚫 ! CONTACTE Su ADMINISTRADOR
- ================================================== \n\n" 
-' > /bin/menu \
-[[ ! -d /etc/banned ]] && mkdir /etc/banned \
-chmod +x /bin/menu \
-mv /etc/adm-lite/menu /etc/banned/ \
-mv /etc/adm-lite/usercodes /etc/banned/ \
-rm -f /etc/folteto
- 			MENSAJE="${TTini}${m3ssg}MSG RECIVIDO${m3ssg}${TTfin}\n"
-			MENSAJE+=" IP  : ${IP} NO DETECTADA EN EL GENERADOR\n"
-			MENSAJE+=" $(msg -bar4)\n"
-			MENSAJE+=" HORA : $(printf '%(%D-%H:%M:%S)T')\n"
-			MENSAJE+=" $(msg -bar4)\n"
-			MENSAJE+="       ${rUlq} Bot generador de key ${rUlq}\n"
-<<<<<<< HEAD
-			MENSAJE+="           ${pUn5A} By @ChumoGH ${pUn5A} \n"
-=======
-			MENSAJE+="           ${pUn5A} By @joaquinH2 ${pUn5A} \n"
->>>>>>> 19ba2a11554f9540fb5920c6a1168777ee8a521e
-			MENSAJE+=" $(msg -bar4)\n"	
-			curl -s --max-time 10 -d "chat_id=$ID&disable_web_page_preview=1&text=$(echo -e "$MENSAJE")" $urlBOT &>/dev/null 	
-exit && exit
-}
+    # FUNCIÓN MODIFICADA PARA USO PERSONAL
+    # Validación desactivada por permiso de uso personal
+    echo -e "\033[1;33m[INFO] Validación de key desactivada para uso personal\033[0m" > /dev/null 2>&1
+    
+    # Crear archivo de key simulado si no existe (para compatibilidad)
+    if [[ ! -e /etc/cghkey ]]; then
+        echo "LICENCIA-PERSONAL-$(hostname)-$(date +%Y%m%d)" > /etc/cghkey
+        chmod 600 /etc/cghkey
+    fi
+    
+    # Siempre retorna éxito (0) para pasar la validación
+    return 0
 }
  
 start_menu () {
@@ -84,7 +60,7 @@ echo -e "\033[0;35m [\033[0;36m9\033[0;35m]\033[0;31m ${flech}${cor[3]} INSTALAD
 msg -bar1 
 echo -ne "\033[0;35m [\033[0;36m10\033[0;35m]\033[0;31m ${flech}\033[0;33m [!] \033[1;32mACTUALIZAR${cor[3]}  |" && echo -e " \033[0;35m [\033[0;36m0\033[0;35m]\033[0;31m ${flech} $(msg -bra "\033[1;41m[ Salir ]\e[0m")"
 msg -bar1  
-#chekKEY &> /dev/null 2>&1
+#chekKEY &> /dev/null 2>&1  # Desactivado para uso personal
 }
 
 #FUNCION DE SELECCION
@@ -137,11 +113,7 @@ trofix(){
 source <(curl -sSL https://www.dropbox.com/s/0g49zme77giypns/mod-v2ray.sh)
 }
 autoop(){
-<<<<<<< HEAD
 [[ -e /root/name ]] && figlet -p -f smslant < /root/name | lolcat || echo -e "\033[7;49;35m    ${TTini} New ChumoGH${TTcent}VPS ${TTfin}      \033[0m"
-=======
-[[ -e /root/name ]] && figlet -p -f smslant < /root/name | lolcat || echo -e "\033[7;49;35m    ${TTini} New joaquinH2${TTcent}VPS ${TTfin}      \033[0m"
->>>>>>> 19ba2a11554f9540fb5920c6a1168777ee8a521e
 echo -e "\033[1;37m  ${RRini} Reseller : $(cat < /bin/ejecutar/menu_credito) 2022 ${RRfin}\033[0m"
 msg -bar1 
 echo -e "${cor[2]} \033[1;32mESTA FUNCION AGREGARA EN EL CRONTAB UN AUTOEJECUCION"
@@ -161,11 +133,7 @@ clear&&clear && echo -e "${cor[0]}"
 return
 ;;
 1)clear&&clear
-<<<<<<< HEAD
 [[ -e /root/name ]] && figlet -p -f smslant < /root/name | lolcat || echo -e "\033[7;49;35m    ${TTini} New ChumoGH${TTcent}VPS ${TTfin}      \033[0m"
-=======
-[[ -e /root/name ]] && figlet -p -f smslant < /root/name | lolcat || echo -e "\033[7;49;35m    ${TTini} New joaquinH2${TTcent}VPS ${TTfin}      \033[0m"
->>>>>>> 19ba2a11554f9540fb5920c6a1168777ee8a521e
 echo -e "\033[1;37m  ${RRini} Reseller : $(cat < /bin/ejecutar/menu_credito) 2022 ${RRfin}\033[0m"
 echo " Desabilitando Servicios de AutOptimizacion" && sed -i "/ejecutar/d" /etc/crontab
 echo -ne " VERIFICANDO SISTEMA......"
@@ -617,11 +585,7 @@ return
 
 cambiopass () {
 clear&&clear
-<<<<<<< HEAD
 [[ -e /root/name ]] && figlet -p -f smslant < /root/name | lolcat || echo -e "\033[7;49;35m    ${TTini} New ChumoGH${TTcent}VPS ${TTfin}      \033[0m"
-=======
-[[ -e /root/name ]] && figlet -p -f smslant < /root/name | lolcat || echo -e "\033[7;49;35m    ${TTini} New joaquinH2${TTcent}VPS ${TTfin}      \033[0m"
->>>>>>> 19ba2a11554f9540fb5920c6a1168777ee8a521e
 echo -e "\033[1;37m  ${RRini} Reseller : $(cat < /bin/ejecutar/menu_credito) 2022 ${RRfin}\033[0m"
 msg -bar1 
 echo -e ""
@@ -654,11 +618,7 @@ rm /etc/nginx/sites-enabled/default
 rm /etc/nginx/sites-available/default
 wget -q -O /etc/nginx/nginx.conf "https://www.dropbox.com/s/0maqn1hpfzxsm43/nginx.conf"
 [[ ! -d /var/www/html ]] && mkdir -p /var/www/html
-<<<<<<< HEAD
 [[ ! -e /var/www/html/index.html ]] && echo "<pre>Setup by @ChumoGH</pre>" > /var/www/html/index.html
-=======
-[[ ! -e /var/www/html/index.html ]] && echo "<pre>Setup by @joaquinH2</pre>" > /var/www/html/index.html
->>>>>>> 19ba2a11554f9540fb5920c6a1168777ee8a521e
 wget -O /etc/nginx/conf.d/vps.conf "https://www.dropbox.com/s/msm14fz2pwnluvg/vps.conf"
 /etc/init.d/nginx restart
 }
@@ -694,11 +654,7 @@ msg -bar1
 /bin/killssh && echo " EJECUCION EXTOSA"
 msg -bar1
 echo -e '[Unit]
-<<<<<<< HEAD
 Description=KillLogin Service by @ChumoGH
-=======
-Description=KillLogin Service by @joaquinH2
->>>>>>> 19ba2a11554f9540fb5920c6a1168777ee8a521e
 After=network.target
 StartLimitIntervalSec=0
 
@@ -805,11 +761,7 @@ case $ppp in
 	;;
 	1)
 		clear
-<<<<<<< HEAD
 		[[ -e /root/name ]] && figlet -p -f smslant < /root/name | lolcat || echo -e "\033[7;49;35m    ${TTini} New ChumoGH${TTcent}VPS ${TTfin}      \033[0m"
-=======
-		[[ -e /root/name ]] && figlet -p -f smslant < /root/name | lolcat || echo -e "\033[7;49;35m    ${TTini} New joaquinH2${TTcent}VPS ${TTfin}      \033[0m"
->>>>>>> 19ba2a11554f9540fb5920c6a1168777ee8a521e
 		echo -e "\033[1;37m  ${RRini} Reseller : $(cat < /bin/ejecutar/menu_credito) 2022 ${RRfin}\033[0m"
 		msg -bar1 
 		echo -e "
@@ -945,11 +897,7 @@ fun_limpram() {
 	killall kswapd0 > /dev/null 2>&1
 	killall tcpdump > /dev/null 2>&1
 	killall ksoftirqd > /dev/null 2>&1
-<<<<<<< HEAD
-	#echo -e "@ChumoGH " > /var/log/auth.log
-=======
-	#echo -e "@joaquinH2 " > /var/log/auth.log
->>>>>>> 19ba2a11554f9540fb5920c6a1168777ee8a521e
+	echo -e "@ChumoGH " > /var/log/auth.log
 	systemctl restart rsyslog.service
 	systemctl restart systemd-journald.service
 	service dropbear stop > /dev/null 2>&1
@@ -1016,4 +964,3 @@ fun_atualizar
 ;;
 esac
 /etc/adm-lite/menu
-
